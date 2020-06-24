@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 const graphql = require('graphql');
 const _ = require('lodash');
 
@@ -6,9 +7,12 @@ const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLInt, GraphQLSchema }
 // TEMP :: Placeholder Data
 
 const books = [
-  { name: 'Book One', genre: 'Fantasy', id: '1' },
-  { name: 'Book Two', genre: 'Fantasy', id: '2' },
-  { name: 'Book Three', genre: 'Sci-Fi', id: '3' },
+  { name: 'Book One', genre: 'Fantasy', id: '1', authorId: '1' },
+  { name: 'Book Two', genre: 'Fantasy', id: '2', authorId: '2' },
+  { name: 'Book Three', genre: 'Sci-Fi', id: '3', authorId: '3' },
+  { name: 'Book Four', genre: 'Fantasy', id: '1', authorId: '2' },
+  { name: 'Book Five', genre: 'Fantasy', id: '2', authorId: '3' },
+  { name: 'Book Six', genre: 'Fantasy', id: '3', authorId: '3' },
 ];
 
 const authors = [
@@ -23,6 +27,12 @@ const BookType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString },
+    author: {
+      type: AuthorType,
+      resolve(parent, args) {
+        return _.find(authors, { id: parent.authorId });
+      },
+    },
   }),
 });
 
