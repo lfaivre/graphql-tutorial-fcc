@@ -36,6 +36,7 @@ const BookType = new GraphQLObjectType({
     genre: { type: GraphQLString },
     author: {
       type: AuthorType,
+      // eslint-disable-next-line no-unused-vars
       resolve(parent, args) {
         return _.find(authors, { id: parent.authorId });
       },
@@ -51,6 +52,7 @@ const AuthorType = new GraphQLObjectType({
     age: { type: GraphQLInt },
     books: {
       type: new GraphQLList(BookType),
+      // eslint-disable-next-line no-unused-vars
       resolve(parent, args) {
         return _.filter(books, { authorId: parent.id });
       },
@@ -73,6 +75,20 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return _.find(authors, { id: args.id });
+      },
+    },
+    books: {
+      type: new GraphQLList(BookType),
+      // eslint-disable-next-line no-unused-vars
+      resolve(parent, args) {
+        return books;
+      },
+    },
+    authors: {
+      type: new GraphQLList(AuthorType),
+      // eslint-disable-next-line no-unused-vars
+      resolve(parent, args) {
+        return authors;
       },
     },
   },
