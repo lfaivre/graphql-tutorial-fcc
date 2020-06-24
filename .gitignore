@@ -6,7 +6,7 @@ notes/
 *.txt
 
 # VS Code
-.vscode/
+# .vscode/
 
 # MacOS
 .DS_STORE
