@@ -1,24 +1,9 @@
-import React, { useEffect } from 'react';
-import { gql } from 'apollo-boost';
+import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
-
-const BOOKS = gql`
-  {
-    books {
-      name
-      id
-    }
-  }
-`;
+import { BOOKS } from '../queries';
 
 export default () => {
   const { loading, error, data } = useQuery(BOOKS);
-
-  useEffect(() => {
-    console.log('DATA - LOADING:', loading);
-    console.log('DATA - ERROR:', error);
-    console.log('DATA - DATA:', data);
-  });
 
   const displayBooks = () => {
     if (loading && !error) {
