@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const graphqlHTTP = require('express-graphql');
 const mongoose = require('mongoose');
 const schema = require('./schema');
 
 const app = express();
+app.use(cors());
 
 const DB_URI = `mongodb+srv://${process.env.MONGODB_USER_ADMIN_USERNAME}:${process.env.MONGODB_USER_ADMIN_PASSWORD}@general-91kb5.mongodb.net/${process.env.MONGODB_DB_NAME}?retryWrites=true&w=majority`;
 
