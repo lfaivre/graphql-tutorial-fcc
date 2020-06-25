@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { AUTHORS, ADD_BOOK } from '../queries';
+import { AUTHORS, BOOKS, ADD_BOOK } from '../queries';
 
 export default () => {
   const [name, setName] = useState('');
@@ -12,10 +12,7 @@ export default () => {
     error: authorsQueryError,
     data: authorsQueryData,
   } = useQuery(AUTHORS);
-  const [
-    updateBooks,
-    { loading: booksMutationLoading, error: booksMutationError, data: booksMutationData },
-  ] = useMutation(ADD_BOOK);
+  const [updateBooks] = useMutation(ADD_BOOK);
 
   const displayAuthors = () => {
     if (authorsQueryLoading && !authorsQueryError) {
@@ -45,8 +42,7 @@ export default () => {
 
   const submitForm = (event) => {
     event.preventDefault();
-    console.log(`NAME: ${name}\nGenre: ${genre}\nAuthor ID: ${authorId}`);
-    updateBooks({ variables: { name, genre, authorId } });
+    updateBooks({ variables: { name, genre, authorId }, refetchQueries: [{ query: BOOKS }] });
     reset();
   };
 
@@ -60,20 +56,36 @@ export default () => {
       <div className="field">
         <label htmlFor="book-name-input">
           Name:
-          <input id="book-name-input" type="text" onChange={(e) => setName(e.target.value)} />
+          <input
+            id="book-name-input"
+            type="text"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+          />
         </label>
       </div>
       <div className="field">
         <label htmlFor="book-genre-input">
           Genre:
-          <input id="book-genre-input" type="text" onChange={(e) => setGenre(e.target.value)} />
+          <input
+            id="book-genre-input"
+            type="text"
+            onChange={(e) => setGenre(e.target.value)}
+            value={genre}
+          />
         </label>
       </div>
       <div className="field">
         <label htmlFor="book-author-input">
           Author:
-          <select id="book-author-input" onChange={(e) => setAuthorId(e.target.value)}>
-            <option disabled>Select author</option>
+          <select
+            id="book-author-input"
+            onChange={(e) => setAuthorId(e.target.value)}
+            value={authorId}
+          >
+            <option value="" disabled hidden>
+              Select author
+            </option>
             {displayAuthors()}
           </select>
         </label>
