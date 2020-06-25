@@ -1,22 +1,30 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { AUTHORS } from '../queries';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { AUTHORS, ADD_BOOK } from '../queries';
 
 export default () => {
   const [name, setName] = useState('');
   const [genre, setGenre] = useState('');
   const [authorId, setAuthorId] = useState('');
 
-  const { loading, error, data } = useQuery(AUTHORS);
+  const {
+    loading: authorsQueryLoading,
+    error: authorsQueryError,
+    data: authorsQueryData,
+  } = useQuery(AUTHORS);
+  const [
+    updateBooks,
+    { loading: booksMutationLoading, error: booksMutationError, data: booksMutationData },
+  ] = useMutation(ADD_BOOK);
 
   const displayAuthors = () => {
-    if (loading && !error) {
+    if (authorsQueryLoading && !authorsQueryError) {
       return <option disabled>Loading authors...</option>;
     }
-    if (error) {
+    if (authorsQueryError) {
       return <option disabled>Error loading authors</option>;
     }
-    return data.authors.map((author) => {
+    return authorsQueryData.authors.map((author) => {
       return (
         <option key={author.id} value={author.id}>
           {author.name}
@@ -25,13 +33,30 @@ export default () => {
     });
   };
 
+  const inputIsValid = () => {
+    return name && name !== '' && genre && genre !== '' && authorId && authorId !== '';
+  };
+
+  const reset = () => {
+    setName('');
+    setGenre('');
+    setAuthorId('');
+  };
+
   const submitForm = (event) => {
     event.preventDefault();
     console.log(`NAME: ${name}\nGenre: ${genre}\nAuthor ID: ${authorId}`);
+    updateBooks({ variables: { name, genre, authorId } });
+    reset();
   };
 
   return (
-    <form action="" id="add-book" onSubmit={submitForm} disabled={loading || error}>
+    <form
+      action=""
+      id="add-book"
+      onSubmit={submitForm}
+      disabled={authorsQueryLoading || authorsQueryError}
+    >
       <div className="field">
         <label htmlFor="book-name-input">
           Name:
@@ -53,7 +78,9 @@ export default () => {
           </select>
         </label>
       </div>
-      <button type="submit">+</button>
+      <button type="submit" disabled={!inputIsValid()}>
+        +
+      </button>
     </form>
   );
 };
