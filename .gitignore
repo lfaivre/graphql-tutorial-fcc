@@ -1,13 +1,8 @@
-# npm
-node_modules/
-
-# Workspace
-.env
-notes/
-*.txt
-
 # VS Code
 # .vscode/
+
+# Workspace
+notes/
 
 # MacOS
 .DS_STORE
