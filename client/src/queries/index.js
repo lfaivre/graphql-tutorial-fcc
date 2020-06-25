@@ -9,6 +9,25 @@ export const BOOKS = gql`
   }
 `;
 
+export const BOOK = gql`
+  query($id: ID!) {
+    book(id: $id) {
+      id
+      name
+      genre
+      author {
+        id
+        name
+        age
+        books {
+          name
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const AUTHORS = gql`
   {
     authors {
